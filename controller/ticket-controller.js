@@ -28,22 +28,16 @@ const getData = async (req, res, next) => {
 }
 
 const updateTicket = async (req, res, next) => {
-    let filter;
-    let update;
-    const ticketId = req.body.itemId;
     const targetId = req.body.targetId;
-    const positionIndex = req.body.positionIndex;
-    filter = { _id: ticketId };
-    update = {
-        status: targetId,
-        position: positionIndex + 1,
-    };
-    await Ticket.findByIdAndUpdate(filter, update).then((data) => {
-        return res.status(200).json({
-            message: 'success'
-        });
-    }).catch((err) => {
-        console.log(err)
-    });
+    const containerData = req.body.containerData;
+    containerData.map(async (data, index) => {
+        const filter = { _id: data._id };
+        const update = {
+            status: targetId,
+            position: index + 1,
+        };
+        await Ticket.findByIdAndUpdate(filter, update);
+    })
 }
+
 module.exports = { newTicket, getData, updateTicket };
